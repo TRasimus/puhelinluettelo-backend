@@ -55,36 +55,37 @@ let persons =  [
     response.status(204).end()
   })
 
-  /*
-
   const generateId = () => {
-    const maxId = notes.length > 0
-      ? Math.max(...notes.map(n => n.id))
-      : 0
-    return maxId + 1
+    const id = Math.floor(Math.random() * 10000)
+    return id
   }
   
-  app.post('/api/notes', (request, response) => {
+  app.post('/api/persons', (request, response) => {
     const body = request.body
   
-    if (!body.content) {
+    if (!body.name) {
       return response.status(400).json({ 
-        error: 'content missing' 
+        error: 'name missing' 
+      })
+    }
+
+    if(!body.number) {
+      return response.status(400).json({ 
+        error: 'number missing' 
       })
     }
   
-    const note = {
-      content: body.content,
-      important: body.important || false,
+    const person = {
       id: generateId(),
+      name: body.name,
+      number: body.number
     }
   
-    notes = notes.concat(note)
+    persons = persons.concat(person)
   
-    response.json(note)
+    response.json(person)
   })
 
-  */
   
   const PORT = 3001
   app.listen(PORT, () => {
