@@ -62,16 +62,23 @@ let persons =  [
   
   app.post('/api/persons', (request, response) => {
     const body = request.body
-  
+    const alreadyAdded = persons.some(person => person.name === body.name)
+
     if (!body.name) {
       return response.status(400).json({ 
         error: 'name missing' 
       })
     }
 
-    if(!body.number) {
+    if (!body.number) {
       return response.status(400).json({ 
         error: 'number missing' 
+      })
+    }
+
+    if(alreadyAdded) {
+      return response.status(400).json({ 
+        error: 'name must be unique' 
       })
     }
   
