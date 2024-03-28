@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
+const cors = require('cors')
 
 //create custom morgan token for logging request body
 morgan.token('body', req => {
@@ -10,6 +11,7 @@ morgan.token('body', req => {
 
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+app.use(cors())
 
 let persons =  [
     {
