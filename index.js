@@ -84,7 +84,7 @@ let persons =  [
   
   app.post('/api/persons', (request, response) => {
     const body = request.body
-    const alreadyAdded = persons.some(person => person.name === body.name)
+    const alreadyAdded = Person.find({ name: body.name}).length > 0
 
     if (!body.name) {
       return response.status(400).json({ 
@@ -112,6 +112,21 @@ let persons =  [
     person.save().then(savedPerson => {
       response.json(savedPerson)
     })
+  })
+
+  app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+  
+    const person = {
+      name: body.name,
+      number: body.number,
+    }
+  
+    Person.findByIdAndUpdate(request.params.id, person, {new: true})
+      .then(updatedPerson => {
+        response.json(updatedPerson)
+      })
+      .catch(error => next(error))
   })
 
   const errorHandler = (error, request, response, next) => {
