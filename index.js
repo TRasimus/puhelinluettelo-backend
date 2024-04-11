@@ -15,6 +15,7 @@ app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(cors())
 app.use(express.static('dist'))
+
     
   app.get('/info', async (request, response) => {
     const count = await Person.countDocuments({})
@@ -51,35 +52,9 @@ app.use(express.static('dist'))
       })
       .catch(error => next(error))
   })
-
-/*
-  const generateId = () => {
-    const id = Math.floor(Math.random() * 10000)
-    return id
-  }
-*/
   
-  app.post('/api/persons', (request, response) => {
+  app.post('/api/persons', (request, response, next) => {
     const body = request.body
-    const alreadyAdded = Person.find({ name: body.name}).length > 0
-
-    if (!body.name) {
-      return response.status(400).json({ 
-        error: 'name missing' 
-      })
-    }
-
-    if (!body.number) {
-      return response.status(400).json({ 
-        error: 'number missing' 
-      })
-    }
-
-    if(alreadyAdded) {
-      return response.status(400).json({ 
-        error: 'name must be unique' 
-      })
-    }
   
     const person = new Person({
       name: body.name,
@@ -89,6 +64,7 @@ app.use(express.static('dist'))
     person.save().then(savedPerson => {
       response.json(savedPerson)
     })
+    .catch(error => next(error))
   })
 
   app.put('/api/persons/:id', (request, response, next) => {
@@ -99,7 +75,7 @@ app.use(express.static('dist'))
       number: body.number,
     }
   
-    Person.findByIdAndUpdate(request.params.id, person, {new: true})
+    Person.findByIdAndUpdate(request.params.id, person, {new: true, runValidators: true, context:'query'})
       .then(updatedPerson => {
         response.json(updatedPerson)
       })
@@ -111,6 +87,8 @@ app.use(express.static('dist'))
   
     if (error.name === 'CastError') {
       return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+      return response.status(400).json({ error: error.message })
     }
   
     next(error)
