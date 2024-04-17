@@ -21,10 +21,13 @@ const personSchema = new mongoose.Schema({
   },
   number: {
     type: String,
-    required: true
+    minlength: 8,
+    required: true,
+    validate: {
+      validator: (v) => {return /^\d{2,3}-\d{6,}$/.test(v)} // number format: 2 or 3 digits between 0-9, dash, at least 6 digits between 0-9
+    }
   }
 })
-
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
