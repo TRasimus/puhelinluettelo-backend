@@ -7,6 +7,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\\\" && exit 1",
+    "lint": "eslint .",
     "build:ui": "@powershell Remove-Item -Recurse -Force dist && cd C:/Users/tuuli/fullstack2024/osa2/puhelinluettelo && npm run build && @powershell Copy-Item dist -Recurse C:/Users/tuuli/puhelinluettelo-backend",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
   },
@@ -21,6 +22,15 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.0.2",
+    "@eslint/js": "^9.0.0",
+    "@stylistic/eslint-plugin-js": "^1.7.2",
+    "eslint": "^8.57.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.1.1",
+    "globals": "^15.0.0",
     "nodemon": "^3.1.0"
   }
 }
